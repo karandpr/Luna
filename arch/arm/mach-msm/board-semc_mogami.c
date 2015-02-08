@@ -179,11 +179,11 @@
 #define MSM_RAM_CONSOLE_SIZE    (128 * SZ_1K)
 #endif
 
-#ifdef CONFIG_FB_MSM_HDPI
-#define MSM_PMEM_SF_SIZE	0x1C00000
-#else
-#define MSM_PMEM_SF_SIZE	0x1600000
-#endif
+//#ifdef CONFIG_FB_MSM_HDPI
+//#define MSM_PMEM_SF_SIZE	0x1C00000
+//#else
+//#define MSM_PMEM_SF_SIZE	0x1600000
+//#endif
 
 #ifdef CONFIG_FB_MSM_HDMI_SII9024A_PANEL
 #define MSM_HDMI_SIZE           0x30000
@@ -191,14 +191,29 @@
 #define MSM_HDMI_SIZE           0
 #endif /* CONFIG_FB_MSM_HDMI_SII9024A_PANEL */
 
-#ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
+/*#ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 #define MSM_FB_SIZE             (864 * 480 * 4 * 3) + MSM_HDMI_SIZE
 #else
 #define MSM_FB_SIZE             (864 * 480 * 4 * 2) + MSM_HDMI_SIZE
-#endif /*CONFIG_FB_MSM_TRIPLE_BUFFER*/
+#endif*/ /*CONFIG_FB_MSM_TRIPLE_BUFFER*/
 
-#define MSM_PMEM_CAMERA_SIZE    0x0000000
-#define MSM_PMEM_ADSP_SIZE      0x1C00000
+//#define MSM_PMEM_CAMERA_SIZE    0x0000000
+//#define MSM_PMEM_ADSP_SIZE      0x1C00000
+
+#define MSM_FB_SIZE		(320 * 480 * 4 * 3) 
+
+//#define MSM_PMEM_SF_SIZE	0x800000
+//#define MSM_PMEM_CAMERA_SIZE		0xBE0000
+//#define MSM_PMEM_ADSP_SIZE			0x1E80000
+//#define MSM_PMEM_ADSP_SIZE			0x1FBD000
+
+#define MSM_PMEM_SF_SIZE	0xB00000
+//#define MSM_PMEM_CAMERA_SIZE		0xBE0000
+//#define MSM_PMEM_ADSP_SIZE			0x1E80000
+#define MSM_PMEM_CAMERA_SIZE		0x0
+#define MSM_PMEM_ADSP_SIZE			0x1BC6000
+
+
 #define PMEM_KERNEL_EBI1_SIZE   0x600000
 
 #define PMIC_GPIO_INT		27
@@ -3338,7 +3353,7 @@ static struct android_pmem_platform_data android_pmem_kernel_ebi1_pdata = {
 static struct android_pmem_platform_data android_pmem_adsp_pdata = {
 	.name = "pmem_adsp",
 	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
-	.cached = 0,
+	.cached = 1,
 };
 
 static struct android_pmem_platform_data android_pmem_camera_pdata = {
@@ -3759,7 +3774,7 @@ static struct platform_device *devices[] __initdata = {
 	&qsd_device_spi,
 	&msm_device_ssbi6,
 	&msm_device_ssbi7,
-	&android_pmem_device,
+//	&android_pmem_device,
 	&msm_fb_device,
 #ifdef CONFIG_MSM_ROTATOR
 	&msm_rotator_device,
@@ -4518,7 +4533,7 @@ static void __init pmem_sf_size_setup(char **p)
 	pmem_sf_size = memparse(*p, p);
 }
 
-__early_param("pmem_sf_size=", pmem_sf_size_setup);
+//__early_param("pmem_sf_size=", pmem_sf_size_setup);
 
 static unsigned fb_size = MSM_FB_SIZE;
 static void __init fb_size_setup(char **p)
@@ -4557,14 +4572,14 @@ static void __init msm7x30_allocate_memory_regions(void)
 	void *addr;
 	unsigned long size;
 
-	size = pmem_sf_size;
+	/*size = pmem_sf_size;
 	if (size) {
 		addr = alloc_bootmem(size);
 		android_pmem_pdata.start = __pa(addr);
 		android_pmem_pdata.size = size;
 		pr_info("allocating %lu bytes at %p (%lx physical) for sf "
 			"pmem arena\n", size, addr, __pa(addr));
-	}
+	}*/
 
 	size = fb_size ? : MSM_FB_SIZE;
 	addr = alloc_bootmem(size);
